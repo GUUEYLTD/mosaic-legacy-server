@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "careplan-c2677",
+  "private_key_id": "9c52512e9738b74555e99da152afb01f4a46a9cb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCvhXQahJB0zb2K\npAHu7oyz+SFtcpgRGd157OMF3LtUu2ixuVWFYtpP6U7gFWf78jIgHwcpZGuVng0e\nJC9xDQ4dZm4gDIWsnmdpW+vg6XCA2qSH0U1PnuGPsUXmdWcA4SqIcIHR40QMGn4s\nSvJKYveXZs2ah/b6b5XGk1JiiyNuvL4Sz8wTPI+IPMxBsjHLL+l7A0sXDJJbR5jQ\nUl38xwBTJHGS0D0cLOkUb7P07javf1Fmccv2W04huffFAGT/mwKaFhf7mfEMdG+D\njiJtV8Dk8G7ZTg35n/jUjHVLMkEK9/LjXyrHo6zHqU+GrKKek27TUcGC+wu3nr/K\nhObghEw7AgMBAAECggEARGVaouK5b+qkS5wxbKvkhFU2Y3HeM/vCRDq9FJG5JgGJ\ngIfZ/YpRzAX8SHHO/WyZf87XeZe6HKlkLzSmkAUoVOiPTUnT5Tosze+V8STGRE/v\nAUXcPISLHPVVacKiCsOzUUuWKvXGlHjWZegmljoOhR74S5lj8p783E6YMfJKMmIQ\nbWRD/8Q6Kn5FyElbnHsQmUst41mQO08GqIaJpA550amUCqLyCTRvTY8CgrWUsLbj\nA7uSJDUBlbXQASa5lTC2XRGHDjzQehCB/Zkn5FzAzdhKY5Go/svLS0aTSi2SwW3L\njYd427UD1Aew9Aop9pfWUkCBWBRaqmzaCbTT8JY/0QKBgQDlgDSf/HOh9AbYuQ6q\nQaZiu6DAV66zxgOPXY3Yonem/Fx5bTh9MJ8jdM6Cdi6zro2rzUI0SzbldX77tUo5\nwg5QmZ9cEIUMQF2YuV7eL7HgNXmcYcN3xPwQG5Xch8drt09UXTHvR7hbFK3E95Bf\n7H02LAxQTmfrZ0U8RbMYtilHnQKBgQDDyawt9AS2qKLFqDQuSF9kvd0L/sknSloM\n8PYZbOnx07COOmnPzA2EKkMlFn6kACqRQ0/kVh/1zrMttkSGvi2cB+IDO7z+Y/J4\na5BjCkwRialh2wq2HkxbK0LqeUTkX4q8rxXkW1oXkWLSUMSrGdcPJumA6uY4UwA7\nnn45+O8XtwKBgEEWwlYZiEYHaqWunn0lD2ZzJl1GwPKVl07izqcBNQQ0EJoTovDG\niGvK5gLUN9yYBfASz9L6/f/H+hKzUPDem6a6WxsGSGW4H5OAB2rmhgE7yVjT1Vcz\nk/WRjUg1bhabr7ESmWXupleWns39FIJQFRb3GSrxgcGe0WENt4SrrTt1AoGBAJgc\nhnYJYOQc7qGMRkYzGlIlpKheIiAxhvcI+trUIIougrxtq6mzCklFoHcfG/ME4g2L\n83UeaKRMHC+GrYTWGo9gHHuQnQwz0L04LKyV4nW5s2yAhrjpnz8xxEJxR1H63Mot\naV/KjZtD7DgkYjfg0pJGFCKB3a2i5sprH/ygZ/nPAoGBAIYauFkWr+c16OcYH/ZB\n7Fg7TYQfOTxdQNrkNYafQg8eK+ilk7Fy8nKq0PNhj1bwTtFKHFBOUkGkxPEkDJ5r\nLYuBhJWqDfaaa/kYY3CbMf4/lf04sv3KtJe3pOIa85nCRmxrObk9JlRhwu0XOzrJ\n/ag0A4HXDNmrBwiIpbejugte\n-----END PRIVATE KEY-----\n",
+  "client_email": "nodeservices@careplan-c2677.iam.gserviceaccount.com",
+  "client_id": "103586269423034754271",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/nodeservices%40careplan-c2677.iam.gserviceaccount.com"
+}
