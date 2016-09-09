@@ -6,28 +6,33 @@ var db = firebase.database();
 exports.monitor = function checkShipStatusLive(){
 	return setInterval(function(){
     //begin code to be executed every time period
-    var notifiablesDB=db.ref("/notifications/notifiable/");
-    notifiablesDB.once("value",function(snapshot){
+    var homesDB=db.ref("/homeIndex/");
+    homesDB.once("value",function(snapshot){
       snapshot.forEach(function(childSnapshot){
-        var notifiable=childSnapshot.val();
+        var notifiablesDB=db.ref("/homes/"+childSnapshot.val()+"/notifications/notifiable");
+        notifiablesDB.once("value",function(childSnapshot){
+          snapshot.forEach(function(grandChildSnapshot){
+            var notifiable=grandChildSnapshot.val();
 
-        console.log("found notification: "+childSnapshot.key);
-        if(notifiable.conditions.type==="simple"){
-          if(notifiable.conditions.condition===true){
-            console.log("found notifiable ready to notify."+childSnapshot.key);
-            notifiable.history.notify=Date.now();
-            var notifiesDB=db.ref("/notifications/notify/"+childSnapshot.key);
-            notifiesDB.set(notifiable)
-              .then(function(){
-                console.log("notifiable successfully written to notify deleting notifiable."+childSnapshot.key);
-                var notifyDB=db.ref("/notifications/notifiable/"+childSnapshot.key);
-                notifyDB.set(null)
-                  .then(function(x){
-                    console.log("deleted: "+childSnapshot.key);
+            console.log("found notification: "+grandChildSnapshot.key);
+            if(notifiable.conditions.type==="simple"){
+              if(notifiable.conditions.condition===true){
+                console.log("found notifiable ready to notify."+grandChildSnapshot.key);
+                notifiable.history.notify=Date.now();
+                var notifiesDB=db.ref("/notifications/notify/"+grandChildSnapshot.key);
+                notifiesDB.set(notifiable)
+                  .then(function(){
+                    console.log("notifiable successfully written to notify deleting notifiable."+grandChildSnapshot.key);
+                    var notifyDB=db.ref("/notifications/notifiable/"+grandChildSnapshot.key);
+                    notifyDB.set(null)
+                      .then(function(x){
+                        console.log("deleted: "+grandChildSnapshot.key);
+                      });
                   });
-              });
-          };
-        };
+              };
+            };
+          });
+        });
       });
     });
   //end code to be executed every time period

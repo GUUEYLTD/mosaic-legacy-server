@@ -56,6 +56,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-//checkNotifications.monitor();
+checkNotifications.monitor();
 
 module.exports = app;
