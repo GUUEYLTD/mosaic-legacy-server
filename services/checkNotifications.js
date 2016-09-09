@@ -15,22 +15,48 @@ exports.monitor = function checkShipStatusLive(){
           childSnapshot.forEach(function(grandChildSnapshot){
             var notifiable=grandChildSnapshot.val();
             console.log("found notification: "+grandChildSnapshot.key);
-            if(notifiable.conditions.type==="simple"){
-              if(notifiable.conditions.condition===true){
-                console.log("found notifiable ready to notify."+grandChildSnapshot.key);
-                notifiable.history.notify=Date.now();
-                var notifiesDB=db.ref(homeNotifyPath+"/notify/"+grandChildSnapshot.key);
-                notifiesDB.set(notifiable)
-                  .then(function(){
-                    console.log("notifiable successfully written to notify deleting notifiable."+grandChildSnapshot.key);
-                    var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+grandChildSnapshot.key);
-                    notifyDB.set(null)
-                      .then(function(x){
-                        console.log("deleted: "+grandChildSnapshot.key);
-                      });
-                  });
-              };
-            };
+
+						switch(notifiable.conditions.type){
+							case "simple":
+								if(notifiable.conditions.condition===true){
+									console.log("found notifiable ready to notify."+grandChildSnapshot.key);
+									notifiable.history.notify=Date.now();
+									var notifiesDB=db.ref(homeNotifyPath+"/notify/"+grandChildSnapshot.key);
+									notifiesDB.set(notifiable)
+										.then(function(){
+											console.log("notifiable successfully written to notify deleting notifiable."+grandChildSnapshot.key);
+											var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+grandChildSnapshot.key);
+											notifyDB.set(null)
+												.then(function(x){
+													console.log("deleted: "+grandChildSnapshot.key);
+												});
+										});
+								};
+
+								break;
+
+							case "guuey-date":
+								//check if the future date is less than one day from now
+								if(notifiable.conditions.condition-Date.now <86400000){
+									console.log("found notifiable with a future date less than one day from now."+grandChildSnapshot.key);
+									notifiable.history.notify=Date.now();
+									var notifiesDB=db.ref(homeNotifyPath+"/notify/"+grandChildSnapshot.key);
+									notifiesDB.set(notifiable)
+										.then(function(){
+											console.log("notifiable successfully written to notify deleting notifiable."+grandChildSnapshot.key);
+											var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+grandChildSnapshot.key);
+											notifyDB.set(null)
+												.then(function(x){
+													console.log("deleted: "+grandChildSnapshot.key);
+												});
+										});
+								};
+
+								break;
+
+							default:
+						}
+
           });
         });
       });
