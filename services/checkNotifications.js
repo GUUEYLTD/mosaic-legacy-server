@@ -11,9 +11,8 @@ exports.monitor = function checkShipStatusLive(){
       snapshot.forEach(function(childSnapshot){
         var notifiablesDB=db.ref("/homes/"+childSnapshot.val()+"/notifications/notifiable");
         notifiablesDB.once("value",function(childSnapshot){
-          snapshot.forEach(function(grandChildSnapshot){
+          childSnapshot.forEach(function(grandChildSnapshot){
             var notifiable=grandChildSnapshot.val();
-
             console.log("found notification: "+grandChildSnapshot.key);
             if(notifiable.conditions.type==="simple"){
               if(notifiable.conditions.condition===true){
