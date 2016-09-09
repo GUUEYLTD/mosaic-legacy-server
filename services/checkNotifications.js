@@ -9,7 +9,8 @@ exports.monitor = function checkShipStatusLive(){
     var homesDB=db.ref("/homeIndex/");
     homesDB.once("value",function(snapshot){
       snapshot.forEach(function(childSnapshot){
-        var notifiablesDB=db.ref("/homes/"+childSnapshot.val()+"/notifications/notifiable");
+        var homeNotifyPath="/homes/"+childSnapshot.val()+"/notifications";
+        var notifiablesDB=db.ref(homeNotifyPath+"/notifiable");
         notifiablesDB.once("value",function(childSnapshot){
           childSnapshot.forEach(function(grandChildSnapshot){
             var notifiable=grandChildSnapshot.val();
@@ -18,11 +19,11 @@ exports.monitor = function checkShipStatusLive(){
               if(notifiable.conditions.condition===true){
                 console.log("found notifiable ready to notify."+grandChildSnapshot.key);
                 notifiable.history.notify=Date.now();
-                var notifiesDB=db.ref("/notifications/notify/"+grandChildSnapshot.key);
+                var notifiesDB=db.ref(homeNotifyPath+"/notify/"+grandChildSnapshot.key);
                 notifiesDB.set(notifiable)
                   .then(function(){
                     console.log("notifiable successfully written to notify deleting notifiable."+grandChildSnapshot.key);
-                    var notifyDB=db.ref("/notifications/notifiable/"+grandChildSnapshot.key);
+                    var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+grandChildSnapshot.key);
                     notifyDB.set(null)
                       .then(function(x){
                         console.log("deleted: "+grandChildSnapshot.key);
