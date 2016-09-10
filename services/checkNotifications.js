@@ -15,7 +15,6 @@ exports.monitor = function checkShipStatusLive(){
           childSnapshot.forEach(function(grandChildSnapshot){
             var notifiable=grandChildSnapshot.val();
             console.log("found notification: "+grandChildSnapshot.key);
-
 						switch(notifiable.conditions.type){
 							case "simple":
 								if(notifiable.conditions.condition===true){
@@ -37,7 +36,7 @@ exports.monitor = function checkShipStatusLive(){
 
 							case "guuey-date":
 								//check if the future date is less than one day from now
-								if(notifiable.conditions.condition-Date.now <86400000){
+								if(notifiable.conditions.condition-Date.now() <86400000){
 									console.log("found notifiable with a future date less than one day from now."+grandChildSnapshot.key);
 									notifiable.history.notify=Date.now();
 									var notifiesDB=db.ref(homeNotifyPath+"/notify/"+grandChildSnapshot.key);
@@ -62,5 +61,5 @@ exports.monitor = function checkShipStatusLive(){
       });
     });
   //end code to be executed every time period
-},1000*10);
+},1000*5);
 };
