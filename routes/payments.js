@@ -8,4 +8,9 @@ router.post('/payments', function(req, res, next){
   res.json({response:"recieved"});
 });
 
+router.get('/payments', function(req, res, next){
+  console.log(req);
+  res.json({response:"recieved"});
+});
+
 module.exports = router;
