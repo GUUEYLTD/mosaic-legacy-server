@@ -50,7 +50,7 @@ var self=module.exports={
 				notifiesDB.set(notifiable)
 					.then(function(){
 						console.log("notifiable successfully written to notify setting dateCompleted."+snapshot.key);
-						var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+snapshot.key+"/conditions/dateCompleted");
+						var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+snapshot.key+"/conditions/timeCompleted");
 						notifyDB.set(Date.now())
 							.then(function(snapshot){
 								console.log("notification updated with new dateCompleted field: "+Date.now());
@@ -78,9 +78,8 @@ var self=module.exports={
 		var todayRepeat=new Date();
 		todayRepeat.setHours(repeatTime.hours,repeatTime.minutes,0,0);
     if(Date.now() - todayRepeat < 1000*60*60){
-      if(!conditions.dateCompleted){
-        return true;
-      } else if(Date.now() - conditions.timeCompleted > 1000*60*60*23){
+			console.log("less than an hour till daily med notify time.");
+			if((Date.now() - conditions.timeCompleted > 1000*60*60*23) || !conditions.timeCompleted){
         return true;
       } else {
         return false;
@@ -97,6 +96,7 @@ var self=module.exports={
       return false;
     };
     if(conditions.weekdays.indexOf(today) != -1){
+			console.log("notify contains today: "+today);
       return true;
     } else {
       return false;
@@ -135,6 +135,6 @@ var self=module.exports={
           });
         });
       });
-    },1000*1*5);
+    },1000*60*5);
   }
 };
