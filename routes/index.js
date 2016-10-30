@@ -9,7 +9,13 @@ firebase.initializeApp({
 });
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: "firebase test"});
+  res.render('index', { title: "Guuey Server"});
+});
+
+//route to handle posts with files to upload to firebase
+router.post('/uploads', function(req, res, next){
+  console.log(req);
+  res.json({response:"recieved"});
 });
 
 //test with polymer iron-ajax

@@ -3,6 +3,7 @@ var firebase = require('firebase');
 var db = firebase.database();
 
 var self=module.exports={
+	homeNotifyPath:"",
 
   handleGuueyDate:function(snapshot, homeNotifyPath){
     var notifiable=snapshot.val();
@@ -41,43 +42,17 @@ var self=module.exports={
   },
 
   handleDailyMeds:function(snapshot, homeNotifyPath){
-    if(self.checkWeekday(snapshot.val().conditions)){
-      if(self.checkCompleted(snapshot.val().conditions)){
-        console.log("timechunks and periods passed");
-				var notifiable=snapshot.val();
-				notifiable.history.notify=Date.now();
-				var notifiesDB=db.ref(homeNotifyPath+"/notify/"+snapshot.key);
-				notifiesDB.set(notifiable)
-					.then(function(){
-						console.log("notifiable successfully written to notify setting dateCompleted."+snapshot.key);
-						var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+snapshot.key+"/conditions/dateCompleted");
-						notifyDB.set(Date.now())
-							.then(function(snapshot){
-								console.log("notification updated with new dateCompleted field: "+Date.now());
-							});
-					});
+    if(checkWeekday(snapshot.conditions)){
+      if(checkCompleted(snapshot.conditions)){
+        console.log("cool");
       };
     } else {
-      console.log("checks failed");
+      console.log("not cool man...");
     };
   },
 
-	convertTime:function(time){
-		time.replace("AM","");
-		time.replace("PM","");
-		time.trim();
-		var timeArr=time.split(":");
-		var timeObj={}
-		timeObj.hours=parseInt(timeArr[0]);
-		timeObj.minutes=parseInt(timeArr[1]);
-		return timeObj;
-	},
-
   checkCompleted:function(conditions){
-		var repeatTime=self.convertTime(conditions.repeatTime);
-		var todayRepeat=new Date();
-		todayRepeat.setHours(repeatTime.hours,repeatTime.minutes,0,0);
-    if(Date.now() - todayRepeat < 1000*60*60){
+    if(Date.now() - conditions.repeatTime < 1000*60*60){
       if(!conditions.dateCompleted){
         return true;
       } else if(Date.now() - conditions.timeCompleted > 1000*60*60*23){
@@ -93,6 +68,7 @@ var self=module.exports={
     var today=new Date();
     today=today.getDay();
     today=weekdayArr[today];
+
     if(!conditions.weekdays){
       return false;
     };
@@ -135,6 +111,6 @@ var self=module.exports={
           });
         });
       });
-    },1000*1*5);
+    },1000*60*5);
   }
 };

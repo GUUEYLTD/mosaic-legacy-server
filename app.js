@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var checkNotifications = require('./services/checkNotifications.js');
+var dailyMedNotifications =require("./services/dailyMedNotifications.js");
 var app = express();
 
 // view engine setup
@@ -57,5 +58,6 @@ app.use(function(err, req, res, next) {
   });
 });
 checkNotifications.monitor();
+//dailyMedNotifications.monitor();
 
 module.exports = app;
