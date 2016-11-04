@@ -1,6 +1,5 @@
 var express = require('express');
-var firebase = require('firebase');
-var db = firebase.database();
+var db = require("../modules/firebase");
 
 var self=module.exports={
 

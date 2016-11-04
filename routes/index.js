@@ -1,12 +1,7 @@
 var express = require('express');
 var router = express.Router();
-//import firebase module
-var firebase = require("firebase");
-//initialize with key and cofig
-firebase.initializeApp({
-  serviceAccount: "./config/carePlan-167770748d88.json",
-  databaseURL: "https://careplan-c2677.firebaseio.com"
-});
+var payments = require('./payments/payments');
+router.use('/payments', payments);
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: "Guuey Server"});
