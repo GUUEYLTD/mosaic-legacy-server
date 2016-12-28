@@ -3,6 +3,83 @@ var db = require("./firebase");
 
 var self=module.exports={
 
+  //new functions
+  initialSub:function(req){
+    return new Promise(function(resolve, reject){
+      stripe.customers.create({source:req.stripeToken, plan:req.planId, quantity:req.users})
+      .then(function(customer){
+        resolve(customer.id);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+    });
+  },
+
+  saveCustomerId:function(id, home){
+    return new Promise(function(resolve, reject){
+      var customerDB=db.ref("homes/"+home+"/details");
+      customerDB.update({customerID:id})
+      .then(function(){
+        resolve(id);
+      }, function(err){
+        console.log(err);
+        reject(err);
+      });
+    });
+  },
+
+  customerInfo:function(customerId){
+    return stripe.customers.retrieve(customerId);
+  },
+
+  addCard:function(req){
+    return stripe.customers.createSource(req.customerId,{source: req.stripeToken});
+  },
+
+  deleteCard:function(req){
+    return stripe.customers.deleteCard(req.customerId, req.cardId);
+  },
+
+  setDefaultCard:function(req){
+    return stripe.customers.update(req.customerId, {
+      default_source:req.cardId
+    });
+  },
+
+  listPlans:function(){
+    return new Promise(function(resolve, reject){
+      stripe.plans.list()
+      .then(function(plans){
+        resolve(plans);
+      })
+      .catch(function(err){
+        reject(err);
+      });
+    });
+  },
+
+  addPlan:function(req){
+    return stripe.subscriptions.create({
+      customer:req.customerId,
+      plan:req.planId,
+      quantity:req.users
+    });
+  },
+  deletePlan:function(req){
+    console.log(req);
+    return stripe.customers.cancelSubscription(req.customerId, req.subId);
+  },
+  saveDeletePlan:function(req){
+    var planDB=db.ref("homes/"+req.home+"/details/plans/"+req.planId);
+    return planDB.update({name:req.planName, active:false});
+  },
+  saveAddPlan:function(req){
+    var planDB=db.ref("homes/"+req.home+"/details/plans/"+req.planId);
+    return planDB.update({name:req.planName, active:true});
+  },
+  //end new functions
+
   checkStripePlan:function(req){
     return new Promise(function(resolve, reject){
       stripe.plans.retrieve(req.planId)
