@@ -5,40 +5,6 @@ var payments=require("../../modules/stripe");
 
 var stripe = require("stripe")("sk_test_wy2eqgGLc0xhCu32bMU1xVrc");
 
-//route to handle posts with files to upload to firebase
-router.post("/startSubscription", function(req, res, next){
-  console.log(req.body);
-  payments.checkCreatePlan(req.body)
-    .then(function(customer){
-      res.json({success:"true"});
-    })
-    .catch(function(err){
-      res.json(err);
-    });
-
-});
-
-router.post("/cancelSubscription", function(req, res, next){
-  payments.cancelSubscription(req.body)
-  .then(function(sub){
-    res.json({success:"true"});
-  })
-  .catch(function(err){
-    res.json(err);
-  });
-});
-
-router.post("/updateSubscription", function(req, res, next){
-  payments.checkUpdatePlan(req.body)
-  .then(function(res){
-    res.json({success:"true"});
-  })
-  .catch(function(err){
-    res.json(err);
-  });
-});
-
-//new api routes
 router.post("/initialsub", function(req, res, next){
   payments.initialSub(req.body)
   .then(function(customerId){
@@ -48,14 +14,12 @@ router.post("/initialsub", function(req, res, next){
       res.json(resObj);
     })
     .catch(function(err){
-      console.log(err);
       res.json(err);
     });
   });
 });
 
 router.post("/customerinfo", function(req, res, next){
-  console.log(req.body);
   payments.customerInfo(req.body.customerId)
     .then(function(cards){
       res.json(cards);
@@ -66,40 +30,31 @@ router.post("/customerinfo", function(req, res, next){
 });
 
 router.post("/addcard", function(req, res, next){
-  console.log(req.body);
   payments.addCard(req.body)
     .then(function(card){
-      console.log(card);
       res.json(card);
     })
     .catch(function(err){
-      console.log(err);
       res.json(err);
     });
 });
 
 router.post("/deletecard", function(req, res, next){
-  console.log(req.body);
   payments.deleteCard(req.body)
     .then(function(card){
-      console.log(card);
       res.json(card);
     })
     .catch(function(err){
-      console.log(err);
       res.json(err);
     });
 });
 
 router.post("/setdefaultcard", function(req, res, next){
-  console.log(req.body);
   payments.setDefaultCard(req.body)
     .then(function(card){
-      console.log(card);
       res.json(card);
     })
     .catch(function(err){
-      console.log(err);
       res.json(err);
     });
 });
@@ -124,7 +79,6 @@ router.post("/addplan", function(req, res, next){
     })
     .catch(function(err){
       res.json(err);
-      console.log(err);
     });
 });
 
@@ -133,13 +87,27 @@ router.post("/deleteplan", function(req, res, next){
     .then(function(plan){
       payments.saveDeletePlan(req.body)
       .then(function(plan){
-        res.json(plan);;
+        res.json(plan);
       });
     })
     .catch(function(err){
-      console.log(err);
       res.json(err);
     });
 });
+
+router.post("/getcharges", function(req, res, next){
+  if(req.body.customerId){
+    payments.getCharges(req.body)
+      .then(function(charges){
+        res.json(charges);
+      })
+      .catch(function(err){
+        res.json(err);
+      });
+  } else {
+    res.json({error:"missing customerID"});
+  };
+});
+
 
 module.exports = router;
