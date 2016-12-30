@@ -4,8 +4,8 @@ var trial = require("../modules/trial");
 
 router.post("/starttrial", function(req, res, next){
   trial.initTrial(req.body)
-  .then(function(){
-    res.json({success:true});
+  .then(function(result){
+    res.json(result);
   })
   .catch(function(err){
     console.log(err);
