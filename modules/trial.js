@@ -6,16 +6,16 @@ module.exports={
     var trialDB=db.ref("/payments/"+req.home);
     trialDB.once("value", function(snapshot){
       var payments = snapshot.val();
-      if(payments.trial && payments.created){
-        console.log("account already on trial mode starting on: "+payments.created)
-        return;
-      } else {
+      if(!payments || !payments.created){
         var date = new Date();
         date = date.getTime();
         return trialDB.set({
           status:"trial",
           created:date
         });
+      } else {
+        console.log("account already on trial mode starting on: "+payments.created)
+        return;
       };
     });
   }
