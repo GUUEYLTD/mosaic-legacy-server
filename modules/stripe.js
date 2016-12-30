@@ -1,7 +1,7 @@
 var stripe = require("stripe")("sk_test_wy2eqgGLc0xhCu32bMU1xVrc");
 var db = require("./firebase");
 
-var self=module.exports={
+module.exports={
 
   initialSub:function(req){
     return new Promise(function(resolve, reject){

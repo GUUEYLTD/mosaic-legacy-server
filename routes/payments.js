@@ -1,14 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var db = require("../../modules/firebase");
-var payments=require("../../modules/stripe");
-
-var stripe = require("stripe")("sk_test_wy2eqgGLc0xhCu32bMU1xVrc");
+var stripeMethods = require("../modules/stripe");
 
 router.post("/initialsub", function(req, res, next){
-  payments.initialSub(req.body)
+  stripeMethods.initialSub(req.body)
   .then(function(customerId){
-    payments.saveCustomerId(customerId, req.body.home)
+    stripeMethods.saveCustomerId(customerId, req.body.home)
     .then(function(id){
       var resObj={id:id};
       res.json(resObj);
@@ -20,7 +17,7 @@ router.post("/initialsub", function(req, res, next){
 });
 
 router.post("/customerinfo", function(req, res, next){
-  payments.customerInfo(req.body.customerId)
+  stripeMethods.customerInfo(req.body.customerId)
     .then(function(cards){
       res.json(cards);
     })
@@ -30,7 +27,7 @@ router.post("/customerinfo", function(req, res, next){
 });
 
 router.post("/addcard", function(req, res, next){
-  payments.addCard(req.body)
+  stripeMethods.addCard(req.body)
     .then(function(card){
       res.json(card);
     })
@@ -40,7 +37,7 @@ router.post("/addcard", function(req, res, next){
 });
 
 router.post("/deletecard", function(req, res, next){
-  payments.deleteCard(req.body)
+  stripeMethods.deleteCard(req.body)
     .then(function(card){
       res.json(card);
     })
@@ -50,7 +47,7 @@ router.post("/deletecard", function(req, res, next){
 });
 
 router.post("/setdefaultcard", function(req, res, next){
-  payments.setDefaultCard(req.body)
+  stripeMethods.setDefaultCard(req.body)
     .then(function(card){
       res.json(card);
     })
@@ -60,7 +57,7 @@ router.post("/setdefaultcard", function(req, res, next){
 });
 
 router.post("/listplans", function(req, res, next){
-  payments.listPlans()
+  stripeMethods.listPlans()
     .then(function(plans){
       res.json(plans);
     })
@@ -70,9 +67,9 @@ router.post("/listplans", function(req, res, next){
 });
 
 router.post("/addplan", function(req, res, next){
-  payments.addPlan(req.body)
+  stripeMethods.addPlan(req.body)
     .then(function(plan){
-      payments.saveAddPlan(req.body)
+      stripeMethods.saveAddPlan(req.body)
       .then(function(plan){
         res.json(plan);
       });
@@ -83,9 +80,9 @@ router.post("/addplan", function(req, res, next){
 });
 
 router.post("/deleteplan", function(req, res, next){
-  payments.deletePlan(req.body)
+  stripeMethods.deletePlan(req.body)
     .then(function(plan){
-      payments.saveDeletePlan(req.body)
+      stripeMethods.saveDeletePlan(req.body)
       .then(function(plan){
         res.json(plan);
       });
@@ -97,7 +94,7 @@ router.post("/deleteplan", function(req, res, next){
 
 router.post("/getcharges", function(req, res, next){
   if(req.body.customerId){
-    payments.getCharges(req.body)
+    stripeMethods.getCharges(req.body)
       .then(function(charges){
         res.json(charges);
       })
