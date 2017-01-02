@@ -68,10 +68,11 @@ router.post("/listplans", function(req, res, next){
 
 router.post("/addplan", function(req, res, next){
   stripeMethods.addPlan(req.body)
-    .then(function(plan){
-      stripeMethods.saveAddPlan(req.body)
-      .then(function(plan){
-        res.json(plan);
+    .then(function(sub){
+      console.log("past add plan.");
+      stripeMethods.saveAddPlan(req.body, sub)
+      .then(function(sub){
+        res.json(sub);
       });
     })
     .catch(function(err){
@@ -81,10 +82,10 @@ router.post("/addplan", function(req, res, next){
 
 router.post("/deleteplan", function(req, res, next){
   stripeMethods.deletePlan(req.body)
-    .then(function(plan){
-      stripeMethods.saveDeletePlan(req.body)
-      .then(function(plan){
-        res.json(plan);
+    .then(function(sub){
+      stripeMethods.saveDeletePlan(req.body, sub)
+      .then(function(sub){
+        res.json(sub);
       });
     })
     .catch(function(err){

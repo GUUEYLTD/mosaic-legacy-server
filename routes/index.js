@@ -6,7 +6,7 @@ var trial = require('./trial');
 router.use('/payments', payments);
 router.use('/trial', trial);
 router.get('/', function(req, res, next) {
-  res.render('index', { title: "Guuey Server"});
+  res.render('index', { title: "Mosaique Server"});
 });
 
 module.exports = router;

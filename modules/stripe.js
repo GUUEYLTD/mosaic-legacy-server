@@ -58,7 +58,13 @@ module.exports={
   },
 
   addPlan:function(req){
+    var date = new Date();
+    date = date.getTime();
+    date /=1000;
+    date = Math.floor(date +60);
+    console.log(date);
     return stripe.subscriptions.create({
+      trial_end:date,
       customer:req.customerId,
       plan:req.planId,
       quantity:req.users
@@ -67,10 +73,12 @@ module.exports={
   deletePlan:function(req){
     return stripe.customers.cancelSubscription(req.customerId, req.subId);
   },
-  saveDeletePlan:function(req){
+  saveDeletePlan:function(req, sub){
     return new Promise(function(resolve, reject){
-      var planDB=db.ref("homes/"+req.home+"/details/plans/"+req.planId);
-      planDB.update({name:req.planName, active:false})
+      //var planDB=db.ref("homes/"+req.home+"/details/plans/"+req.planId);
+      //planDB.update({name:req.planName, active:false})
+      var planDB = db.ref("/payments/" + req.home + "/" + sub.id);
+      planDB.set(null)
       .then(function(req){
         resolve(req);
       }, function(err){
@@ -78,10 +86,14 @@ module.exports={
       });
     });
   },
-  saveAddPlan:function(req){
+  saveAddPlan:function(req, sub){
+    console.log("in save add plan");
+    var date = new Date();
+    var date = date.getTime();
     return new Promise(function(resolve, reject){
-      var planDB=db.ref("homes/"+req.home+"/details/plans/"+req.planId);
-      planDB.update({name:req.planName, active:true})
+      var planDB = db.ref("/payments/" + req.home + "/" + sub.id);
+      //var planDB=db.ref("homes/"+req.home+"/details/plans/"+req.planId);
+      planDB.update({created:date, name:sub.plan.name, status:sub.status})
       .then(function(snap){
         resolve(req);
       }, function(err){

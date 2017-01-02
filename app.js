@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var checkNotifications = require('./services/checkNotifications');
+var checkPayments = require('./services/checkPayments');
 var app = express();
 
 // view engine setup
@@ -56,6 +57,6 @@ app.use(function(err, req, res, next) {
 });
 
 checkNotifications.monitor();
-
+checkPayments.monitor();
 
 module.exports = app;
