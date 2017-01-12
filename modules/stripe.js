@@ -93,7 +93,7 @@ module.exports={
     return new Promise(function(resolve, reject){
       var planDB = db.ref("/payments/" + req.home + "/" + sub.id);
       //var planDB=db.ref("homes/"+req.home+"/details/plans/"+req.planId);
-      planDB.update({created:date, name:sub.plan.name, status:sub.status, id:sub.plan.id});
+      planDB.update({created:date, name:sub.plan.name, status:sub.status, id:sub.plan.id})
       .then(function(snap){
         resolve(req);
       }, function(err){
