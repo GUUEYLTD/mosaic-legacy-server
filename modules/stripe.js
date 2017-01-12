@@ -7,7 +7,17 @@ module.exports={
     return new Promise(function(resolve, reject){
       stripe.customers.create({source:req.stripeToken, plan:req.planId, quantity:req.users})
       .then(function(customer){
-        resolve(customer.id);
+        var date = new Date();
+        var date = date.getTime();
+        var sub = customer.subscriptions.data[0];
+        var planDB = db.ref("/payments/" + req.home + "/" + sub.id);
+        //var planDB=db.ref("homes/"+req.home+"/details/plans/"+req.planId);
+        planDB.update({created:date, name:sub.plan.name, status:sub.status, id:sub.plan.id})
+        .then(function(snap){
+          resolve(customer.id);
+        }, function(err){
+          reject(err);
+        });
       })
       .catch(function(err){
         reject(err);
@@ -62,7 +72,6 @@ module.exports={
     date = date.getTime();
     date /=1000;
     date = Math.floor(date +60);
-    console.log(date);
     return stripe.subscriptions.create({
       trial_end:date,
       customer:req.customerId,
@@ -87,7 +96,6 @@ module.exports={
     });
   },
   saveAddPlan:function(req, sub){
-    console.log("in save add plan");
     var date = new Date();
     var date = date.getTime();
     return new Promise(function(resolve, reject){
