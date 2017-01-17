@@ -1,4 +1,4 @@
-var stripe = require("stripe")("sk_test_wy2eqgGLc0xhCu32bMU1xVrc");
+var stripe = require("stripe")("sk_live_6naCZ8A78iR8dDLIyYmDeev8");
 var db = require("./firebase");
 
 module.exports={
