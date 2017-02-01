@@ -2,8 +2,8 @@
 var firebase = require("firebase");
 //initialize with key and cofig
 var FBApp=firebase.initializeApp({
-  serviceAccount: "./config/carePlan-167770748d88.json",
-  databaseURL: "https://careplan-c2677.firebaseio.com"
+  serviceAccount: "./config/mosaic-care-5cea8-firebase-adminsdk-2nih6-416a6b7d01.json",
+  databaseURL: "https://mosaic-care-5cea8.firebaseio.com"
 });
 
 module.exports=FBApp.database();
