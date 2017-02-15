@@ -1,5 +1,5 @@
 var express = require('express');
-var db = require("../modules/firebase");
+var db = require("../modules/firebase").db;
 
 var self=module.exports={
 
@@ -86,6 +86,10 @@ var self=module.exports={
     };
   },
 
+  createPushNotification: function() {
+
+  },
+
   checkWeekday:function(conditions){
     var weekdayArr=["so","mo","tu","we","th","fr","sa"];
     var today=new Date();
@@ -109,6 +113,7 @@ var self=module.exports={
       var homesDB=db.ref("/homeIndex/");
       homesDB.once("value",function(snapshot){
         snapshot.forEach(function(childSnapshot){
+          console.log(childSnapshot.val());
           var homeNotifyPath="/homes/"+childSnapshot.val()+"/notifications";
           var notifiablesDB=db.ref(homeNotifyPath+"/notifiable");
           notifiablesDB.once("value",function(childSnapshot){

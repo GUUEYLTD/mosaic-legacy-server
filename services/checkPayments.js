@@ -1,5 +1,5 @@
 var express = require('express');
-var db = require("../modules/firebase");
+var db = require("../modules/firebase").db;
 var stripe = require("stripe")("sk_live_6naCZ8A78iR8dDLIyYmDeev8");
 
 var self = module.exports={
