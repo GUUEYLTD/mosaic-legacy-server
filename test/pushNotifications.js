@@ -15,15 +15,18 @@ let expect = chai.expect
      var conditions;
      fbMessaging.getRelevantUserTokens(home, type, conditions)
       .then(function(tokens) {
+        expect(tokens).to.be.instanceOf(Array);
+        expect(tokens.length).to.be.above(0);
         var message = {
           type:"simple",
-          title: "hello from mosaic test",
+          title: "Simple notification test",
           body: "test body from mosaic test",
           location: "/stuff/andthings"
         };
 
         fbMessaging.messageUsers(message)
           .then(function(res) {
+            console.log("from simple");
             console.log(res);
             done();
           })
@@ -37,12 +40,29 @@ let expect = chai.expect
      this.timeout(10000);
      var home = '-KTBXzZw3-qoZz4c7nY7';
      var type = 'guuey-date';
-     var conditions;
+     var conditions = {
+       patientID: '-KTBYUmNSGo4W8c29cME'
+     };
      fbMessaging.getRelevantUserTokens(home, type, conditions)
       .then(function(tokens) {
         expect(tokens).to.be.instanceOf(Array);
         expect(tokens.length).to.be.above(0);
-        done();
+        var message = {
+          type:"simple",
+          title: "guuey-date from mosaic test",
+          body: "test body from mosaic test",
+          location: "/stuff/andthings"
+        };
+
+        fbMessaging.messageUsers(message)
+          .then(function(res) {
+            console.log("from guuey-date");
+            console.log(res);
+            done();
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
       });
    });
 
@@ -50,12 +70,30 @@ let expect = chai.expect
      this.timeout(10000);
      var home = '-KTBXzZw3-qoZz4c7nY7';
      var type = 'dailyMeds';
-     var conditions;
+     var conditions = {
+       patientID: '-KTBYUmNSGo4W8c29cME'
+     };
      fbMessaging.getRelevantUserTokens(home, type, conditions)
       .then(function(tokens) {
         expect(tokens).to.be.instanceOf(Array);
         expect(tokens.length).to.be.above(0);
-        done();
+        var message = {
+          type:"dailyMeds",
+          title: "dailyMeds from mosaic test",
+          body: "test body from mosaic test",
+          location: "/stuff/andthings"
+        };
+
+        fbMessaging.messageUsers(message)
+          .then(function(res) {
+            console.log("from dailyMeds");
+            console.log(res);
+            done();
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
       });
    });
+
  });

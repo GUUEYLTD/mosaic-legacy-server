@@ -8,7 +8,7 @@ var that = module.exports = {
 
   conditions: null,
 
-  uid: null,
+  patientID: null,
 
   path: null,
 
@@ -51,60 +51,67 @@ var that = module.exports = {
     });
   },
 
-  handleSimple: function(resolve, reject, users) {
+  handleSimple: function(resolve, reject, users, conditions) {
 
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.role === "admin" || user.role === "manager") {
-        if(user.messagingToken) {
-          that.relevantUserTokens.push(user.messagingToken);
+        for(x in user.messagingTokens) {
+          if(user.settings.notificationSources[x]) {
+            console.log(user.messagingTokens[x]);
+            that.relevantUserTokens.push(user.messagingTokens[x]);
+          };
         };
       };
     });
     resolve(that.relevantUserTokens);
   },
 
-  handleGuueyDate: function(resolve, reject, users) {
+  handleGuueyDate: function(resolve, reject, users, conditions) {
     users.forEach(function(userData) {
       var user = userData.val();
-      if(user.patients && user.patients.includes('-KTBYUmNSGo4W8c29cME')) {
-        if(user.messagingToken) {
-          that.relevantUserTokens.push(user.messagingToken);
+      if(user.patients && user.patients.includes(conditions.patientID)) {
+        for(x in user.messagingTokens) {
+          if(user.settings.notificationSources[x]) {
+            that.relevantUserTokens.push(user.messagingTokens[x]);
+          };
         };
       };
     });
-    if(that.relevantUserTokens.length === 0) {
-      users.forEach(function(userData) {
-        var user = userData.val();
-        if(user.role === "admin" || user.role === "manager") {
-          if(user.messagingToken) {
-            that.relevantUserTokens.push(user.messagingToken);
+    users.forEach(function(userData) {
+      var user = userData.val();
+      if(user.role === "admin" || user.role === "manager") {
+        for(x in user.messagingTokens) {
+          if(user.settings.notificationSources[x]) {
+            that.relevantUserTokens.push(user.messagingTokens[x]);
           };
         };
-      });
-    };
+      };
+    });
     resolve(that.relevantUserTokens);
   },
 
-  handleDailyMeds: function(resolve, reject, users) {
+  handleDailyMeds: function(resolve, reject, users, conditions) {
     users.forEach(function(userData) {
       var user = userData.val();
-      if(user.patients && user.patients.includes('-KTBYUmNSGo4W8c29cME')) {
-        if(user.messagingToken) {
-          that.relevantUserTokens.push(user.messagingToken);
+      if(user.patients && user.patients.includes(conditions.patientID)) {
+        for(x in user.messagingTokens) {
+          if(user.settings.notificationSources[x]) {
+            that.relevantUserTokens.push(user.messagingTokens[x]);
+          };
         };
       };
     });
-    if(that.relevantUserTokens.length === 0) {
-      users.forEach(function(userData) {
-        var user = userData.val();
-        if(user.role === "admin" || user.role === "manager") {
-          if(user.messagingToken) {
-            that.relevantUserTokens.push(user.messagingToken);
+    users.forEach(function(userData) {
+      var user = userData.val();
+      if(user.role === "admin" || user.role === "manager") {
+        for(x in user.messagingTokens) {
+          if(user.settings.notificationSources[x]) {
+            that.relevantUserTokens.push(user.messagingTokens[x]);
           };
         };
-      });
-    };
+      };
+    });
     resolve(that.relevantUserTokens);
   },
 
@@ -120,27 +127,7 @@ var that = module.exports = {
     };
   },
 
-  messageUser: function(message) {
-    db.ref("/homes/" + home + "/users/" + uid + "/messagingToken")
-      .once("value", function(snap) {
-        that.token = snap.val();
-        that.createPayload();
-        messaging.sendToDevice(that.token, that.payload)
-          .then(function(res) {
-            console.log(res);
-          })
-          .catch(function(err) {
-            console.log(err);
-          });
-      })
-      .catch(function(err) {
-        console.log(err);
-      });
-
-  },
-
   messageUsers: function(message) {
-    console.log(message);
     that.message = message;
     that.createPayload();
     return messaging.sendToDevice(that.relevantUserTokens, that.payload)

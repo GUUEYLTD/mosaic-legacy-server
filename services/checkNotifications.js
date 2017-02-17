@@ -52,7 +52,7 @@ var self=module.exports={
 						var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+snapshot.key+"/conditions/timeCompleted");
 						notifyDB.set(Date.now())
 							.then(function(snapshot){
-								console.log("notification updated with new dateCompleted field: "+Date.now());
+								console.log("notification updated with new dateCompleted field: " + Date.now());
 							});
 					});
       };
