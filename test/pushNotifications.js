@@ -26,13 +26,10 @@ let expect = chai.expect
 
         fbMessaging.messageUsers(message)
           .then(function(res) {
-            console.log("from simple");
             console.log(res);
-            done();
-          })
-          .catch(function(err) {
-            console.log(err);
-          })
+            done()
+          });
+
       });
    });
 
@@ -56,12 +53,8 @@ let expect = chai.expect
 
         fbMessaging.messageUsers(message)
           .then(function(res) {
-            console.log("from guuey-date");
             console.log(res);
-            done();
-          })
-          .catch(function(err) {
-            console.log(err);
+            done()
           });
       });
    });
@@ -86,13 +79,10 @@ let expect = chai.expect
 
         fbMessaging.messageUsers(message)
           .then(function(res) {
-            console.log("from dailyMeds");
             console.log(res);
-            done();
-          })
-          .catch(function(err) {
-            console.log(err);
+            done()
           });
+
       });
    });
 

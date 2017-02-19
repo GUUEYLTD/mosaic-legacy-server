@@ -16,7 +16,11 @@ var that = module.exports = {
 
   payload: null,
 
+  options: null,
+
   relevantUserTokens: [],
+
+  failureUserTokens: [],
 
   message: {
     type: null,
@@ -34,13 +38,13 @@ var that = module.exports = {
       usersDB.once("value", function(users) {
         switch(type) {
           case "simple":
-            return that.handleSimple(resolve, reject, users, conditions);
+            return that.handleSimpleTokens(resolve, reject, users, conditions);
             break;
           case "guuey-date":
-            return that.handleGuueyDate(resolve, reject, users, conditions);
+            return that.handleGuueyDateTokens(resolve, reject, users, conditions);
             break;
           case "dailyMeds":
-            return that.handleDailyMeds(resolve, reject, users, conditions);
+            return that.handleDailyMedsTokens(resolve, reject, users, conditions);
             break;
           default:
             console.log('no matching notification type!');
@@ -51,15 +55,19 @@ var that = module.exports = {
     });
   },
 
-  handleSimple: function(resolve, reject, users, conditions) {
+  handleSimpleTokens: function(resolve, reject, users, conditions) {
 
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.role === "admin" || user.role === "manager") {
         for(x in user.messagingTokens) {
           if(user.settings.notificationSources[x]) {
-            console.log(user.messagingTokens[x]);
-            that.relevantUserTokens.push(user.messagingTokens[x]);
+            var userTokenObj = {
+              user: userData.key,
+              token: user.messagingTokens[x],
+              key: x
+            }
+            that.relevantUserTokens.push(userTokenObj);
           };
         };
       };
@@ -67,13 +75,18 @@ var that = module.exports = {
     resolve(that.relevantUserTokens);
   },
 
-  handleGuueyDate: function(resolve, reject, users, conditions) {
+  handleGuueyDateTokens: function(resolve, reject, users, conditions) {
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.patients && user.patients.includes(conditions.patientID)) {
         for(x in user.messagingTokens) {
           if(user.settings.notificationSources[x]) {
-            that.relevantUserTokens.push(user.messagingTokens[x]);
+            var userTokenObj = {
+              user: userData.key,
+              token: user.messagingTokens[x],
+              key: x
+            };
+            that.relevantUserTokens.push(userTokenObj);
           };
         };
       };
@@ -83,7 +96,12 @@ var that = module.exports = {
       if(user.role === "admin" || user.role === "manager") {
         for(x in user.messagingTokens) {
           if(user.settings.notificationSources[x]) {
-            that.relevantUserTokens.push(user.messagingTokens[x]);
+            var userTokenObj = {
+              user: userData.key,
+              token: user.messagingTokens[x],
+              key: x
+            };
+            that.relevantUserTokens.push(userTokenObj);
           };
         };
       };
@@ -91,13 +109,18 @@ var that = module.exports = {
     resolve(that.relevantUserTokens);
   },
 
-  handleDailyMeds: function(resolve, reject, users, conditions) {
+  handleDailyMedsTokens: function(resolve, reject, users, conditions) {
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.patients && user.patients.includes(conditions.patientID)) {
         for(x in user.messagingTokens) {
           if(user.settings.notificationSources[x]) {
-            that.relevantUserTokens.push(user.messagingTokens[x]);
+            var userTokenObj = {
+              user: userData.key,
+              token: user.messagingTokens[x],
+              key: x
+            };
+            that.relevantUserTokens.push(userTokenObj);
           };
         };
       };
@@ -107,7 +130,12 @@ var that = module.exports = {
       if(user.role === "admin" || user.role === "manager") {
         for(x in user.messagingTokens) {
           if(user.settings.notificationSources[x]) {
-            that.relevantUserTokens.push(user.messagingTokens[x]);
+            var userTokenObj = {
+              user: userData.key,
+              token: user.messagingTokens[x],
+              key: x
+            };
+            that.relevantUserTokens.push(userTokenObj);
           };
         };
       };
@@ -118,19 +146,78 @@ var that = module.exports = {
   createPayload: function() {
     that.payload = {
       notification: {
+        icon: "https://careplan-c2677.firebaseapp.com/images/Mosaic_Logo.png",
+        clickAction: "https://careplan-c2677.firebaseapp.com/-KTBXzZw3-qoZz4c7nY7/care-plan/su-profile/-KTBYUmNSGo4W8c29cME",
         title: that.message.title || "Mosaic Care Notification",
         body: that.message.body
-      },
-      data: {
-        location: that.message.location
       }
     };
   },
 
+  createOptions: function() {
+    that.options = {
+      contentAvailable: true
+    };
+    if(that.message.type === "dailyMeds") {
+      that.options.timeToLive = 60 * 60 * 24;
+    };
+  },
+
   messageUsers: function(message) {
-    that.message = message;
-    that.createPayload();
-    return messaging.sendToDevice(that.relevantUserTokens, that.payload)
+    return new Promise(function(resolve, reject) {
+      that.message = message;
+      that.createPayload();
+      that.createOptions();
+      var tokens = that.relevantUserTokens.map(tokenObj => {
+        return tokenObj.token;
+      });
+      messaging.sendToDevice(tokens, that.payload)
+      .then(function(res) {
+        if(res.failureCount > 0) {
+          var results = res.results;
+          for(i = 0; i < results.length; i++) {
+            console.log(results[i].error.code);
+            if(results[i].error.code === "messaging/registration-token-not-registered") {
+              that.failureUserTokens.push(that.relevantUserTokens[i]);
+            };
+          };
+          if(that.failureUserTokens.length > 0) {
+            that.deleteUnregisteredTokens(that.failureUserTokens, resolve, reject);
+          } else {
+            resolve(res);
+          };
+
+        } else {
+          resolve(res);
+        };
+      })
+      .catch(function(err) {
+        console.log(err);
+        reject(err);
+      });
+    });
+  },
+
+  deleteUnregisteredTokens: function(tokens, resolve, reject) {
+    tokens.forEach(token => {
+      var userTokensDB = db.ref("/homes/" + that.home + "/users/" + token.user + "/messagingTokens/" + token.key);
+      userTokensDB.set(null)
+      .then(function() {
+        console.log("removed invalid tokens.");
+      })
+      .catch(function(err) {
+        reject(err);
+      });
+      var userSettingsTokenDB = db.ref("/homes/" + that.home + "/users" + token.user + "/settings/notificationSources/" + token.key);
+      userSettingsTokenDB.set(null)
+      .then(function() {
+        console.log("removed invalid tokens.");
+      })
+      .catch(function(err) {
+        reject(err);
+      });
+    });
+    resolve({result: "removed invalid tokens."});
   }
 
 };

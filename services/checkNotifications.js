@@ -1,9 +1,10 @@
 var express = require('express');
 var db = require("../modules/firebase").db;
+var pushNotifications = require("../modules/fbMessaging");
 
 var self=module.exports={
 
-  handleGuueyDate:function(snapshot, homeNotifyPath){
+  handleGuueyDate:function(snapshot, homeNotifyPath, home){
     var notifiable=snapshot.val();
     if(notifiable.conditions.condition-Date.now() < 86400000){
       console.log("found notifiable with a future date less than one day from now."+snapshot.key);
@@ -11,6 +12,23 @@ var self=module.exports={
       var notifiesDB=db.ref(homeNotifyPath+"/notify/"+snapshot.key);
       notifiesDB.set(notifiable)
         .then(function(){
+          var conditions = {
+            patientID: notifiable.patientID
+          };
+          pushNotifications.getRelevantUserTokens(home, "guuey-date", conditions)
+           .then(function(tokens) {
+             var message = {
+               type:"guuey-date",
+               title: "A service user Date is upcoming.",
+               body: notifiable.message,
+               location: "https://careplan-c2677.firebaseapp.com" + notifiable.url
+             };
+             console.log(message.location);
+             pushNotifications.messageUsers(message)
+               .then(function(res) {
+                 console.log(res);
+               });
+           });
           console.log("notifiable successfully written to notify deleting notifiable."+snapshot.key);
           var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+snapshot.key);
           notifyDB.set(null)
@@ -29,6 +47,19 @@ var self=module.exports={
       var notifiesDB=db.ref(homeNotifyPath+"/notify/"+snapshot.key);
       notifiesDB.set(notifiable)
         .then(function(){
+          pushNotifications.getRelevantUserTokens(home, "guuey-date", conditions)
+           .then(function(tokens) {
+            var message = {
+              type:"simple",
+              title: "An important Mosaic event has happened!",
+              body: notifiable.message,
+              location: "https://careplan-c2677.firebaseapp.com/" + notifiable.url
+            };
+            pushNotifications.messageUsers(message)
+              .then(function(res) {
+                console.log(res);
+              });
+          });
           console.log("notifiable successfully written to notify, deleting notifiable."+snapshot.key);
           var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+snapshot.key);
           notifyDB.set(null)
@@ -48,12 +79,25 @@ var self=module.exports={
 				var notifiesDB=db.ref(homeNotifyPath+"/notify/"+snapshot.key);
 				notifiesDB.set(notifiable)
 					.then(function(){
-						console.log("notifiable successfully written to notify setting dateCompleted."+snapshot.key);
-						var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+snapshot.key+"/conditions/timeCompleted");
-						notifyDB.set(Date.now())
-							.then(function(snapshot){
-								console.log("notification updated with new dateCompleted field: " + Date.now());
-							});
+            pushNotifications.getRelevantUserTokens(home, "guuey-date", conditions)
+             .then(function(tokens) {
+              var message = {
+                type:"dailyMeds",
+                title: "Time for a service user's daily medication.",
+                body: notifiable.message,
+                location: "https://careplan-c2677.firebaseapp.com/" + notifiable.url
+              };
+              pushNotifications.messageUsers(message)
+                .then(function(res) {
+                  console.log(res);
+                });
+              });
+    					console.log("notifiable successfully written to notify setting dateCompleted."+snapshot.key);
+    					var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+snapshot.key+"/conditions/timeCompleted");
+    					notifyDB.set(Date.now())
+    						.then(function(snapshot){
+    							console.log("notification updated with new dateCompleted field: " + Date.now());
+    						});
 					});
       };
     } else {
@@ -115,6 +159,7 @@ var self=module.exports={
         snapshot.forEach(function(childSnapshot){
           console.log(childSnapshot.val());
           var homeNotifyPath="/homes/"+childSnapshot.val()+"/notifications";
+          var home = childSnapshot.val();
           var notifiablesDB=db.ref(homeNotifyPath+"/notifiable");
           notifiablesDB.once("value",function(childSnapshot){
             childSnapshot.forEach(function(grandChildSnapshot){
@@ -122,18 +167,18 @@ var self=module.exports={
 							if(notifiable.conditions){
 								switch(notifiable.conditions.type){
 									case "simple":
-										self.handleSimple(grandChildSnapshot, homeNotifyPath);
+										self.handleSimple(grandChildSnapshot, homeNotifyPath, home);
 										break;
 									case "guuey-date":
-										self.handleGuueyDate(grandChildSnapshot, homeNotifyPath);
+										self.handleGuueyDate(grandChildSnapshot, homeNotifyPath, home);
 										break;
                   case "dailyMeds":
-                    self.handleDailyMeds(grandChildSnapshot, homeNotifyPath);
+                    self.handleDailyMeds(grandChildSnapshot, homeNotifyPath, home);
                     break;
 									default:
 										console.log("found a notification of unkown type... ignoring");
 										break;
-								}
+								};
 							}
             });
           });
