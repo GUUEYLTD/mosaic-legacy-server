@@ -39,7 +39,7 @@ var self=module.exports={
     };
   },
 
-  handleSimple:function(snapshot, homeNotifyPath){
+  handleSimple:function(snapshot, homeNotifyPath, home){
 		var notifiable=snapshot.val();
     if(notifiable.conditions.condition===true){
       console.log("found notifiable ready to notify."+snapshot.key);
@@ -70,7 +70,7 @@ var self=module.exports={
     };
   },
 
-  handleDailyMeds:function(snapshot, homeNotifyPath){
+  handleDailyMeds:function(snapshot, homeNotifyPath, home){
     if(self.checkWeekday(snapshot.val().conditions)){
       if(self.checkCompleted(snapshot.val().conditions)){
         console.log("timechunks and periods passed");
@@ -128,10 +128,6 @@ var self=module.exports={
         return false;
       };
     };
-  },
-
-  createPushNotification: function() {
-
   },
 
   checkWeekday:function(conditions){
