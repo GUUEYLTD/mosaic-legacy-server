@@ -1,4 +1,4 @@
-var db = require("./firebase");
+var db = require("./firebase").db;
 
 module.exports={
   //start new trial when home is created needs a home to save location
