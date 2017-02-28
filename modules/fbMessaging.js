@@ -4,6 +4,8 @@ var db = require("../modules/firebase").db;
 var that = module.exports = {
   home: null,
 
+  user: null,
+
   type: null,
 
   conditions: null,
@@ -52,6 +54,31 @@ var that = module.exports = {
             break;
         };
       });
+    });
+  },
+
+  getSingleUserTokens: function(userInput, home) {
+    that.user = userInput;
+    that.home = home;
+    return new Promise(function(resolve, reject) {
+      db.ref("/homes/" + that.home + "/users/" + that.user)
+        .once("value", function(userData) {
+          var user = userData.val();
+          for(x in user.messagingTokens) {
+            if(user.settings.notificationSources[x]) {
+              var userTokenObj = {
+                user: userData.key,
+                token: user.messagingTokens[x],
+                key: x
+              }
+              that.relevantUserTokens.push(userTokenObj);
+            };
+          };
+          resolve(user.email);
+        })
+        .catch(function(err) {
+          reject(err);
+        })
     });
   },
 
