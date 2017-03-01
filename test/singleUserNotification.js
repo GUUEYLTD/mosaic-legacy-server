@@ -11,9 +11,12 @@ let expect = chai.expect
    it("it should send a single notification to a single user unless single user has multiple devices", function(done) {
      this.timeout(10000);
      var home = '-KTBXzZw3-qoZz4c7nY7';
+     //321@mailinator.com
      var user = 'Mu6N9b2RBqgcnlYqhvhWVguTTHB2';
+     //123@mailinator.com
+     var user2 = '0e64NPbXzOQ7Km8jXKQ3DHxOtpK2';
 
-     fbMessaging.getSingleUserTokens(user, home)
+     fbMessaging.getSingleUserTokens(user2, home)
       .then(function(email) {
         var message = {
           type:"simple",
