@@ -39,16 +39,17 @@ var self=module.exports={
     };
   },
 
-  handleSimple:function(snapshot, homeNotifyPath){
-		var notifiable=snapshot.val();
-    if(notifiable.conditions.condition===true){
-      console.log("found notifiable ready to notify."+snapshot.key);
-      notifiable.history.notify=Date.now();
-      var notifiesDB=db.ref(homeNotifyPath+"/notify/"+snapshot.key);
-      notifiesDB.set(notifiable)
-        .then(function(){
-          pushNotifications.getRelevantUserTokens(home, "guuey-date", conditions)
+  handleSimple:function(notifiableData, homeNotifyPath, home){
+		var notifiable = notifiableData.val();
+    if(notifiable.conditions.condition === true) {
+      console.log("found notifiable ready to notify." + notifiableData.key);
+      notifiable.history.notify = Date.now();
+      var notifyDB = db.ref(homeNotifyPath + "/notify/" + notifiableData.key);
+      notifyDB.set(notifiable)
+        .then(function() {
+          pushNotifications.getRelevantUserTokens(home, "simple")
            .then(function(tokens) {
+             console.log(tokens);
             var message = {
               type:"simple",
               title: "An important Mosaic event has happened!",
@@ -60,17 +61,17 @@ var self=module.exports={
                 console.log(res);
               });
           });
-          console.log("notifiable successfully written to notify, deleting notifiable."+snapshot.key);
-          var notifyDB=db.ref(homeNotifyPath+"/notifiable/"+snapshot.key);
+          console.log("notifiable successfully written to notify, deleting notifiable." + notifiableData.key);
+          var notifyDB = db.ref(homeNotifyPath+"/notifiable/" + notifiableData.key);
           notifyDB.set(null)
-            .then(function(x){
-              console.log("deleted: "+snapshot.key);
+            .then(function(x) {
+              console.log("deleted: " + notifiableData.key);
             });
         });
     };
   },
 
-  handleDailyMeds:function(snapshot, homeNotifyPath){
+  handleDailyMeds:function(snapshot, homeNotifyPath, home){
     if(self.checkWeekday(snapshot.val().conditions)){
       if(self.checkCompleted(snapshot.val().conditions)){
         console.log("timechunks and periods passed");
@@ -79,7 +80,7 @@ var self=module.exports={
 				var notifiesDB=db.ref(homeNotifyPath+"/notify/"+snapshot.key);
 				notifiesDB.set(notifiable)
 					.then(function(){
-            pushNotifications.getRelevantUserTokens(home, "guuey-date", conditions)
+            pushNotifications.getRelevantUserTokens(home, "dailyMeds", conditions)
              .then(function(tokens) {
               var message = {
                 type:"dailyMeds",
@@ -150,30 +151,30 @@ var self=module.exports={
     };
   },
 
-  monitor:function(){
-    return setInterval(function(){
+  monitor:function() {
+    return setInterval(function() {
       console.log("checking notifications");
       //begin code to be executed every time period
-      var homesDB=db.ref("/homeIndex/");
-      homesDB.once("value",function(snapshot){
-        snapshot.forEach(function(childSnapshot){
-          console.log(childSnapshot.val());
-          var homeNotifyPath="/homes/"+childSnapshot.val()+"/notifications";
-          var home = childSnapshot.val();
-          var notifiablesDB=db.ref(homeNotifyPath+"/notifiable");
-          notifiablesDB.once("value",function(childSnapshot){
-            childSnapshot.forEach(function(grandChildSnapshot){
-							var notifiable=grandChildSnapshot.val();
+      var homesDB = db.ref("/homeIndex/");
+      homesDB.once("value",function(homesData) {
+        homesData.forEach(function(homeData) {
+          var home = homeData.val();
+          var homeNotifyPath = "/homes/"+ home +"/notifications";
+          var notifiablesDB = db.ref(homeNotifyPath + "/notifiable");
+
+          notifiablesDB.once("value",function(notifiablesData) {
+            notifiablesData.forEach(function(notifiableData) {
+							var notifiable = notifiableData.val();
 							if(notifiable.conditions){
 								switch(notifiable.conditions.type){
 									case "simple":
-										self.handleSimple(grandChildSnapshot, homeNotifyPath, home);
+										self.handleSimple(notifiableData, homeNotifyPath, home);
 										break;
 									case "guuey-date":
-										self.handleGuueyDate(grandChildSnapshot, homeNotifyPath, home);
+										self.handleGuueyDate(notifiableData, homeNotifyPath, home);
 										break;
                   case "dailyMeds":
-                    self.handleDailyMeds(grandChildSnapshot, homeNotifyPath, home);
+                    self.handleDailyMeds(notifiableData, homeNotifyPath, home);
                     break;
 									default:
 										console.log("found a notification of unkown type... ignoring");
@@ -184,6 +185,6 @@ var self=module.exports={
           });
         });
       });
-    },1000*60*5);
+    },1000*1*20);
   }
 };

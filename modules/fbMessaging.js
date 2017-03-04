@@ -83,7 +83,7 @@ var that = module.exports = {
   },
 
   handleSimpleTokens: function(resolve, reject, users, conditions) {
-
+    that.relevantUserTokens = [];
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.role === "admin" || user.role === "manager") {
@@ -103,6 +103,7 @@ var that = module.exports = {
   },
 
   handleGuueyDateTokens: function(resolve, reject, users, conditions) {
+    that.relevantUserTokens = [];
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.patients && user.patients.includes(conditions.patientID)) {
@@ -137,6 +138,7 @@ var that = module.exports = {
   },
 
   handleDailyMedsTokens: function(resolve, reject, users, conditions) {
+    that.relevantUserTokens = [];
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.patients && user.patients.includes(conditions.patientID)) {
