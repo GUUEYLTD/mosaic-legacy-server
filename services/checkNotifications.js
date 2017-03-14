@@ -80,6 +80,9 @@ var self=module.exports={
 				var notifiesDB=db.ref(homeNotifyPath+"/notify/"+snapshot.key);
 				notifiesDB.set(notifiable)
 					.then(function(){
+            var conditions = {
+              patientID: notifiable.patientID
+            };
             pushNotifications.getRelevantUserTokens(home, "dailyMeds", conditions)
              .then(function(tokens) {
               var message = {

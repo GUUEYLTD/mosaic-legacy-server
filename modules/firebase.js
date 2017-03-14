@@ -8,5 +8,6 @@ var FBApp=firebase.initializeApp({
 
 module.exports = {
   db: FBApp.database(),
-  messaging: FBApp.messaging()
+  messaging: FBApp.messaging(),
+  auth: FBApp.auth()
 };
