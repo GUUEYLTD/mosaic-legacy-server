@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var verifications = require('../modules/verify');
+var authMiddleware = require('../middleware/auth');
 /* GET users listing. */
 router.post('/verifyEmail', function(req, res, next) {
   verifications.setEmailVerified(req.body.email)
