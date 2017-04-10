@@ -4,6 +4,8 @@ var db = require("../modules/firebase").db;
 var that = module.exports = {
   home: null,
 
+  user: null,
+
   type: null,
 
   conditions: null,
@@ -55,13 +57,38 @@ var that = module.exports = {
     });
   },
 
-  handleSimpleTokens: function(resolve, reject, users, conditions) {
+  getSingleUserTokens: function(userInput, home) {
+    that.user = userInput;
+    that.home = home;
+    return new Promise(function(resolve, reject) {
+      db.ref("/homes/" + that.home + "/users/" + that.user)
+        .once("value", function(userData) {
+          var user = userData.val();
+          for(x in user.messagingTokens) {
+            if(user.settings.notificationSources[x].active && user.settings.notificationSources[x].deviceLoggedIn) {
+              var userTokenObj = {
+                user: userData.key,
+                token: user.messagingTokens[x],
+                key: x
+              }
+              that.relevantUserTokens.push(userTokenObj);
+            };
+          };
+          resolve(user.email);
+        })
+        .catch(function(err) {
+          reject(err);
+        })
+    });
+  },
 
+  handleSimpleTokens: function(resolve, reject, users, conditions) {
+    that.relevantUserTokens = [];
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.role === "admin" || user.role === "manager") {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources[x]) {
+          if(user.settings.notificationSources[x].active && user.settings.notificationSources[x].deviceLoggedIn) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],
@@ -76,11 +103,12 @@ var that = module.exports = {
   },
 
   handleGuueyDateTokens: function(resolve, reject, users, conditions) {
+    that.relevantUserTokens = [];
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.patients && user.patients.includes(conditions.patientID)) {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources[x]) {
+          if(user.settings.notificationSources[x] && user.settings.notificationSources[x].active && user.settings.notificationSources[x] && user.settings.notificationSources[x].deviceLoggedIn) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],
@@ -95,7 +123,7 @@ var that = module.exports = {
       var user = userData.val();
       if(user.role === "admin" || user.role === "manager") {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources[x]) {
+          if(user.settings.notificationSources[x] && user.settings.notificationSources[x].active && user.settings.notificationSources[x] && user.settings.notificationSources[x].deviceLoggedIn) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],
@@ -110,11 +138,12 @@ var that = module.exports = {
   },
 
   handleDailyMedsTokens: function(resolve, reject, users, conditions) {
+    that.relevantUserTokens = [];
     users.forEach(function(userData) {
       var user = userData.val();
       if(user.patients && user.patients.includes(conditions.patientID)) {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources[x]) {
+          if(user.settings.notificationSources[x] && user.settings.notificationSources[x].active && user.settings.notificationSources[x] && user.settings.notificationSources[x].deviceLoggedIn) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],
@@ -129,7 +158,7 @@ var that = module.exports = {
       var user = userData.val();
       if(user.role === "admin" || user.role === "manager") {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources[x]) {
+          if(user.settings.notificationSources && user.settings.notificationSources[x] && user.settings.notificationSources[x].active && user.settings.notificationSources[x] && user.settings.notificationSources[x].deviceLoggedIn) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],
