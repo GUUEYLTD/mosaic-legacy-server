@@ -3,10 +3,10 @@ var router = express.Router();
 var userFunctions = require ('../modules/userFunctions');
 /* GET users listing. */
 router.post('/suspend', function(req, res, next) {
-  userFunctions.suspendUser(req.body.uid)
-    .then(function(user) {
+  userFunctions.suspendUser(req.body.uid, true)
+    .then(function(status) {
       res.json({
-        user,
+        status,
         status: 'success',
         message: 'User successfully suspended.'
       });
@@ -21,10 +21,10 @@ router.post('/suspend', function(req, res, next) {
 });
 
 router.post('/unsuspend', function(req, res, next) {
-  userFunctions.unsuspendUser(req.body.uid)
-    .then(function(user) {
+  userFunctions.suspendUser(req.body.uid, false)
+    .then(function(status) {
       res.json({
-        user,
+        status,
         status: 'success',
         message: 'User successfullly unsuspended.'
       });
@@ -39,12 +39,10 @@ router.post('/unsuspend', function(req, res, next) {
 });
 
 router.post('/archive', function(req, res, next) {
-  console.log(req.body.uid);
-  userFunctions.archiveUser(req.body.uid)
+  userFunctions.archiveUser(req.body.uid, true)
     .then(function(status) {
-      console.log(status);
       res.json({
-        user,
+        status,
         status: 'success',
         message: 'User successfully archived'
       });
@@ -60,10 +58,10 @@ router.post('/archive', function(req, res, next) {
 });
 
 router.post('/unarchive', function(req, res, next) {
-  userFunctions.unarchiveUser(req.body.uid)
-    .then(function(user) {
+  userFunctions.unarchiveUser(req.body.uid, false)
+    .then(function(status) {
       res.json({
-        user,
+        status,
         status: 'success',
         message: 'User successfully unarchived.'
       });

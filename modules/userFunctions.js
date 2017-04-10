@@ -3,14 +3,6 @@ var db = require("../modules/firebase").db;
 
 var that = module.exports = {
 
-  suspendUser: function(uid) {
-    return auth.updateUser(uid, {disabled: true});
-  },
-
-  unsuspendUser: function(uid) {
-    return auth.updateUser(uid, {disabled: false});
-  },
-
   getUserHome: function(uid) {
     return new Promise(function(resolve, reject) {
       var userHomeDB = db.ref('userIndex/' + uid);
@@ -25,14 +17,13 @@ var that = module.exports = {
     });
   },
 
-  setUserArchived: function(home, uid) {
+  setUserSuspended: function(home, uid, suspended) {
     return new Promise(function(resolve, reject) {
       var userPath = 'homes/' + home + '/users/' + uid;
-      console.log(userPath);
       var userDB = db.ref(userPath);
-      userDB.update({'archived': true})
-        .then(function(stuff) {
-          resolve({home: home, uid: uid, archived: true});
+      userDB.update({'suspended': suspended})
+        .then(function() {
+          resolve({home: home, uid: uid, suspended: suspended});
         })
         .catch(function(err) {
           reject(err);
@@ -40,28 +31,47 @@ var that = module.exports = {
     });
   },
 
-  setUserUnarchived: function(home, uid) {
+  suspendUser: function(uid, suspended) {
     return new Promise(function(resolve, reject) {
-      var userPath = 'homes/' + home + '/users/' + uid;
-      var userDB = db.ref(userPath);
-      userDB.update({'archived': false})
-        .then(function(stuff) {
-          resolve({home: home, uid: uid, archived: false});
+      auth.updateUser(uid, {disabled: !suspended})
+        .then(function() {
+          return that.getUserHome(uid);
+        })
+        .then(function(home) {
+          return that.setUserSuspended(home, uid, suspended);
+        })
+        .then(function(status) {
+          console.log(status)
+          resolve(status);
         })
         .catch(function(err) {
           reject(err);
-        })
+        });
     });
   },
 
-  archiveUser: function(uid) {
+  setUserArchived: function(home, uid, archived) {
     return new Promise(function(resolve, reject) {
-      that.suspendUser(uid)
+      var userPath = 'homes/' + home + '/users/' + uid;
+      var userDB = db.ref(userPath);
+      userDB.update({'archived': archived})
+        .then(function(stuff) {
+          resolve({home: home, uid: uid, archived: archived});
+        })
+        .catch(function(err) {
+          reject(err);
+        });
+    });
+  },
+
+  archiveUser: function(uid, archived) {
+    return new Promise(function(resolve, reject) {
+      that.suspendUser(uid, true)
         .then(function() {
           return that.getUserHome(uid)
         })
         .then(function(home) {
-          return that.setUserArchived(home, uid);
+          return that.setUserArchived(home, uid, archived);
         })
         .then(function(status) {
           resolve(status)
@@ -71,24 +81,6 @@ var that = module.exports = {
           reject({error: 'there was an issue archiving the user: ' + err});
         });
     })
-  },
-
-  unarchiveUser: function(uid) {
-    return new Promise(function(resolve, reject) {
-      that.unsuspendUser(uid)
-        .then(function() {
-          return that.getUserHome(uid);
-        })
-        .then(function(home) {
-          return that.setUserUnarchived(home, uid);
-        })
-        .then(function(status) {
-          resolve(status)
-        })
-        .catch(function(err) {
-          reject({error: 'there was an issue archiving the user: ' + err});
-        });
-    });
   }
 
 };

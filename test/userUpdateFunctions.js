@@ -9,32 +9,6 @@ var db = require("../modules/firebase").db;
 
  //test the /GET route
  describe("user account update functions", () => {
-   it("it should set the user to disabled", function(done) {
-     //uid to use for account functions... need to make sure the account exists for future tests... currently using uid for bob123@mailinator.com
-     var uid = 'zystB9vo1dcK2Pc4F6zSI3aO80m2';
-     userFunctions.suspendUser(uid)
-      .then(function(userRecord) {
-        expect(userRecord.disabledInternal).to.equal(true);
-        done();
-      })
-      .catch(function(err) {
-        console.log(err);
-        done();
-      });
-   });
-
-   it("it should set the user to enabled", function(done) {
-     //uid to use for account functions... need to make sure the account exists for future tests... currently using uid for bob123@mailinator.com
-     var uid = 'zystB9vo1dcK2Pc4F6zSI3aO80m2';
-     userFunctions.unsuspendUser(uid)
-      .then(function(userRecord) {
-        expect(userRecord.disabledInternal).to.equal(false);
-        done();
-      })
-      .catch(function(err) {
-        console.log(err);
-      });
-   });
 
    it("it returns a user's home", function(done) {
      //uid to use for account functions... need to make sure the account exists for future tests... currently using uid for bob123@mailinator.com
@@ -63,6 +37,47 @@ var db = require("../modules/firebase").db;
       .catch(function(err) {
         console.log(err);
         expect(err.error).to.equal('home does not exist for this user.');
+        done();
+      });
+   });
+
+   it("it should set the user to disabled", function(done) {
+     //uid to use for account functions... need to make sure the account exists for future tests... currently using uid for bob123@mailinator.com
+     var uid = 'zystB9vo1dcK2Pc4F6zSI3aO80m2';
+     userFunctions.suspendUser(uid, true)
+      .then(function(status) {
+        userFunctions.getUserHome(uid)
+          .then(function(home) {
+            db.ref('homes/' + home + '/users/' + uid)
+              .once('value', function(userData) {
+                var user = userData.val();
+                console.log(user);
+                expect(user.suspended).to.equal(true);
+                done();
+              });
+          });
+      })
+      .catch(function(err) {
+        console.log(err);
+        done();
+      });
+   });
+
+   it("it should set the user to disabled", function(done) {
+     //uid to use for account functions... need to make sure the account exists for future tests... currently using uid for bob123@mailinator.com
+     var uid = 'zystB9vo1dcK2Pc4F6zSI3aO80m2';
+     userFunctions.suspendUser(uid, false)
+      .then(function(status) {
+        db.ref('homes/' + home + '/users/' + uid)
+          .once('value', function(userData) {
+            var user = userData.val();
+            console.log(user);
+            expect(user.suspended).to.equal(false);
+            done();
+          });
+      })
+      .catch(function(err) {
+        console.log(err);
         done();
       });
    });
