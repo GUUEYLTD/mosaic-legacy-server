@@ -1,6 +1,6 @@
 var express = require('express');
 var db = require("../modules/firebase").db;
-var stripe = require("stripe")("sk_test_wy2eqgGLc0xhCu32bMU1xVrc");
+var stripe = require("stripe")("sk_test_dmOoMspNlFJPKWj2Cl8H0hsD");
 var pushNotifications = require("../modules/fbMessaging");
 
 var self = module.exports={
