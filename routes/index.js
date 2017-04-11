@@ -11,7 +11,7 @@ router.use('/payments', stripe);
 router.use('/verify', verify);
 router.use('/users', authMiddleware.isAuthenticated('manager'), users);
 router.get('/', function(req, res, next) {
-  res.render('index', { title: "Mosaique Server"});
+  res.render('index', { title: "Mosaique Dev Server"});
 });
 
 module.exports = router;
