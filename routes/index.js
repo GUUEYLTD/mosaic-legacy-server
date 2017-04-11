@@ -6,12 +6,12 @@ var users = require('./users');
 var stripe = require('./stripe');
 var authMiddleware = require('../middleware/auth');
 
-router.use('/payments', authMiddleware.isAuthenticated('manager'), payments);
+router.get('/', function(req, res, next) {
+  res.render('index', { title: "Mosaique Server"});
+});
 router.use('/payments', stripe);
 router.use('/verify', verify);
+router.use('/payments', authMiddleware.isAuthenticated('manager'), payments);
 router.use('/users', authMiddleware.isAuthenticated('manager'), users);
-router.get('/', function(req, res, next) {
-  res.render('index', { title: "Mosaique Dev Server"});
-});
 
 module.exports = router;
