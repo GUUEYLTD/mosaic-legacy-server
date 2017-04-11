@@ -47,6 +47,9 @@ self = module.exports = {
     .then(function(customer){
       var usersDB = db.ref("/homes/" + customer.metadata.home + "/patients/suIndex");
       usersDB.once("value", function(users){
+        if(users === null) {
+          return;
+        };
         var usersProcessed = 0;
         var usersLength = users.numChildren();
         var flatDiscountTotal = 0;
