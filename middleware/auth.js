@@ -82,6 +82,7 @@ var that = module.exports = {
               isAuthenticated: false,
               role: null
             };
+            console.log(error);
             res.json({error: 'authentication error.', message: 'incorrect token.'});
           });
       } else {

@@ -1,4 +1,4 @@
-var stripe = require("stripe")("sk_test_wy2eqgGLc0xhCu32bMU1xVrc");
+var stripe = require("stripe")("sk_test_dmOoMspNlFJPKWj2Cl8H0hsD");
 var db = require("./firebase");
 
 self = module.exports = {
@@ -47,6 +47,9 @@ self = module.exports = {
     .then(function(customer){
       var usersDB = db.ref("/homes/" + customer.metadata.home + "/patients/suIndex");
       usersDB.once("value", function(users){
+        if(users === null) {
+          return;
+        };
         var usersProcessed = 0;
         var usersLength = users.numChildren();
         var flatDiscountTotal = 0;

@@ -11,6 +11,7 @@ router.post("/initialsub", function(req, res, next){
       res.json(resObj);
     })
     .catch(function(err){
+      console.log(err);
       res.json(err);
     });
   });
