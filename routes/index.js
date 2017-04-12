@@ -7,7 +7,7 @@ var stripe = require('./stripe');
 var authMiddleware = require('../middleware/auth');
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: "Mosaique Server"});
+  res.render('index', { title: "Mosaique Dev Server"});
 });
 router.use('/payments', stripe);
 router.use('/verify', verify);
