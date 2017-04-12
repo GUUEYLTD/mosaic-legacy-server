@@ -65,7 +65,11 @@ var that = module.exports = {
         .once("value", function(userData) {
           var user = userData.val();
           for(x in user.messagingTokens) {
-            if(user.settings.notificationSources[x].active && user.settings.notificationSources[x].deviceLoggedIn) {
+            if(
+                user.settings
+                && user.settings.notificationSources
+                && user.settings.notificationSources[x].active
+                && user.settings.notificationSources[x].deviceLoggedIn) {
               var userTokenObj = {
                 user: userData.key,
                 token: user.messagingTokens[x],
@@ -88,7 +92,13 @@ var that = module.exports = {
       var user = userData.val();
       if(user.role === "admin" || user.role === "manager") {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources[x].active && user.settings.notificationSources[x].deviceLoggedIn) {
+          if(
+            user.settings
+            && user.settings.notificationSources
+            && user.settings.notificationSources[x]
+            && user.settings.notificationSources[x].active
+            && user.settings.notificationSources[x].deviceLoggedIn
+          ) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],
@@ -108,7 +118,13 @@ var that = module.exports = {
       var user = userData.val();
       if(user.patients && user.patients.includes(conditions.patientID)) {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources[x] && user.settings.notificationSources[x].active && user.settings.notificationSources[x] && user.settings.notificationSources[x].deviceLoggedIn) {
+          if(
+              user.settings
+              && user.settings.notificationSources
+              && user.settings.notificationSources[x]
+              && user.settings.notificationSources[x].active
+              && user.settings.notificationSources[x].deviceLoggedIn
+            ) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],
@@ -123,7 +139,13 @@ var that = module.exports = {
       var user = userData.val();
       if(user.role === "admin" || user.role === "manager") {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources[x] && user.settings.notificationSources[x].active && user.settings.notificationSources[x] && user.settings.notificationSources[x].deviceLoggedIn) {
+          if(
+              user.settings
+              && user.settings.notificationSources
+              && user.settings.notificationSources[x]
+              && user.settings.notificationSources[x].active
+              && user.settings.notificationSources[x].deviceLoggedIn
+            ) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],
@@ -143,7 +165,13 @@ var that = module.exports = {
       var user = userData.val();
       if(user.patients && user.patients.includes(conditions.patientID)) {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources[x] && user.settings.notificationSources[x].active && user.settings.notificationSources[x] && user.settings.notificationSources[x].deviceLoggedIn) {
+          if(
+              user.settings
+              && user.settings.notificationSources
+              && user.settings.notificationSources[x]
+              && user.settings.notificationSources[x].active
+              && user.settings.notificationSources[x].deviceLoggedIn
+            ) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],
@@ -158,7 +186,13 @@ var that = module.exports = {
       var user = userData.val();
       if(user.role === "admin" || user.role === "manager") {
         for(x in user.messagingTokens) {
-          if(user.settings.notificationSources && user.settings.notificationSources[x] && user.settings.notificationSources[x].active && user.settings.notificationSources[x] && user.settings.notificationSources[x].deviceLoggedIn) {
+          if(
+              user.settings
+              && user.settings.notificationSources
+              && user.settings.notificationSources[x]
+              && user.settings.notificationSources[x].active
+              && user.settings.notificationSources[x].deviceLoggedIn
+            ) {
             var userTokenObj = {
               user: userData.key,
               token: user.messagingTokens[x],

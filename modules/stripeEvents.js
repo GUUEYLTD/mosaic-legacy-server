@@ -1,5 +1,5 @@
 var stripe = require("stripe")("sk_test_dmOoMspNlFJPKWj2Cl8H0hsD");
-var db = require("./firebase");
+var db = require("./firebase").db;
 
 self = module.exports = {
 
