@@ -8,7 +8,7 @@ router.post("/stripe",  function(req, res, next){
     console.log("from route: "+result);
     res.json({discount:result});
   })
-  .catch(function(result){
+  .catch(function(err){
     console.error(err);
     res.json(err);
   })
