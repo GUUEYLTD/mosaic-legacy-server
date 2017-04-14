@@ -2,8 +2,8 @@
 var firebase = require("firebase-admin");
 //initialize with key and cofig
 var FBApp=firebase.initializeApp({
-  credential: firebase.credential.cert("./config/carePlan-167770748d88.json"),
-  databaseURL: "https://careplan-c2677.firebaseio.com"
+  credential: firebase.credential.cert("./config/mosaic-dev-b7ffe-firebase-adminsdk-566cj-8a784a3490.json"),
+  databaseURL: "https://mosaic-dev-b7ffe.firebaseio.com"
 });
 
 module.exports = {
