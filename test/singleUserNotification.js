@@ -22,7 +22,7 @@ let expect = chai.expect
           type:"simple",
           title: "To: "+ email,
           body: "test body from mosaic test",
-          location: "https://careplan-c2677.firebaseapp.com/-KTBXzZw3-qoZz4c7nY7/care-plan/su-profile/-KTBYUmNSGo4W8c29cME"
+          location: "https://mosaic-dev-b7ffe.firebaseapp.com/-KTBXzZw3-qoZz4c7nY7/care-plan/su-profile/-KTBYUmNSGo4W8c29cME"
         };
 
         fbMessaging.messageUsers(message)

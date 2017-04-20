@@ -209,8 +209,8 @@ var that = module.exports = {
   createPayload: function() {
     that.payload = {
       notification: {
-        icon: "https://careplan-c2677.firebaseapp.com/images/Mosaic_Logo.png",
-        clickAction: "https://careplan-c2677.firebaseapp.com/-KTBXzZw3-qoZz4c7nY7/care-plan/su-profile/-KTBYUmNSGo4W8c29cME",
+        icon: "https://mosaic-dev-b7ffe.firebaseapp.com/images/icon.png",
+        clickAction: that.location || "",
         title: that.message.title || "Mosaic Care Notification",
         body: that.message.body
       }
