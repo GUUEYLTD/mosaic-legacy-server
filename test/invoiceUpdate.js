@@ -6,7 +6,6 @@ let app = require("../app");
 let should = chai.should();
 let expect = chai.expect;
  chai.use(chaiHTTP);
-
  //test the /GET route
  describe("Stripe web hooks invoice modification", () => {
    it("it should return an invoice line item reflecting a negative balance (positive balance for customer)", (done) => {

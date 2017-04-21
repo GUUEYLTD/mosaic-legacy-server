@@ -4,7 +4,7 @@ var db = require("./firebase").db;
 self = module.exports = {
 
   actionRouter: function(req){
-    console.log(req);
+    console.log(JSON.stringify(req, null, 4));
     return new Promise(function(resolve, reject){
       switch(req.type){
         case "invoice.created":
