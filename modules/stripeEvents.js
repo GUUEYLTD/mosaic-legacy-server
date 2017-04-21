@@ -4,7 +4,6 @@ var db = require("./firebase").db;
 self = module.exports = {
 
   actionRouter: function(req){
-    console.log(JSON.stringify(req, null, 4));
     return new Promise(function(resolve, reject){
       switch(req.type){
         case "invoice.created":
@@ -47,14 +46,17 @@ self = module.exports = {
     self.getCustomer(req.data.object.customer)
     .then(function(customer){
       var usersDB = db.ref("/homes/" + customer.metadata.home + "/patients/suIndex");
-      usersDB.once("value", function(users){
+      usersDB.once("value", function(usersData){
+        var users = usersData.val();
         if(users === null) {
+          console.log('no users');
+          reject({error: 'no users'});
           return;
         };
         var usersProcessed = 0;
-        var usersLength = users.numChildren();
+        var usersLength = usersData.numChildren();
         var flatDiscountTotal = 0;
-        users.forEach(function(user){
+        usersData.forEach(function(user){
           if(user.currentStatus !== "archived" && self.userLessThan30(user.val()) ){
             var fullDays = self.getFullDays();
             var usedDays = self.getUsedDays(user.val());
