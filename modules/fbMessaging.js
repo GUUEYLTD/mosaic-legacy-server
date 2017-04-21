@@ -68,6 +68,7 @@ var that = module.exports = {
             if(
                 user.settings
                 && user.settings.notificationSources
+                && user.settings.notificationSources[x]
                 && user.settings.notificationSources[x].active
                 && user.settings.notificationSources[x].deviceLoggedIn) {
               var userTokenObj = {
@@ -75,6 +76,7 @@ var that = module.exports = {
                 token: user.messagingTokens[x],
                 key: x
               }
+              console.log(userTokenObj);
               that.relevantUserTokens.push(userTokenObj);
             };
           };

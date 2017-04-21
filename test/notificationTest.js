@@ -10,7 +10,7 @@ let expect = chai.expect
  describe("push notification tests", () => {
    it("it should return admin users for simple notification type", function(done) {
      this.timeout(10000);
-     var home = '-KTBXzZw3-qoZz4c7nY7';
+     var home = '-KhaRgQSPTsatmJWcShv';
      var type = 'simple';
      var conditions;
      fbMessaging.getRelevantUserTokens(home, type, conditions)
@@ -21,7 +21,7 @@ let expect = chai.expect
           type:"simple",
           title: "Simple notification test",
           body: "test body from mosaic test",
-          location: "https://mosaic-dev-b7ffe.firebaseapp.com/-KTBXzZw3-qoZz4c7nY7/care-plan/su-profile/-KTBYUmNSGo4W8c29cME"
+          location: "https://mosaic-dev-b7ffe.firebaseapp.com/-KhaRgQSPTsatmJWcShv/care-plan/su-profile/-KhaV8N-6gwk8Sk8znKn"
         };
 
         fbMessaging.messageUsers(message)
