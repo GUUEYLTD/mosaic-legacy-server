@@ -16,6 +16,24 @@ self = module.exports = {
     });
   },
 
+  getEvent: function(id) {
+    return stripe.events.retrieve(id);
+  },
+
+  firstTimeEvent: function(id) {
+    return new Promise(function(resolve, reject) {
+      var eventDB = db.ref('/stripeEvents/' + id);
+      eventDB.once('value', function(eventData) {
+        var event = eventData.val();
+        if(event) {
+          reject({error: 'event has already been used.'});
+        } else {
+          resolve(id);
+        };
+      });
+    });
+  },
+
   userLessThan30:function(user){
     if(user.created){
       var now = new Date();
@@ -39,6 +57,11 @@ self = module.exports = {
 
   getCustomer:function(customerID){
     return stripe.customers.retrieve(customerID);
+  },
+
+  saveEvent: function(id) {
+    var eventDB = db.ref('/stripeEvents');
+    return eventDB.update({[id]: true});
   },
 
   //test handler
@@ -75,7 +98,10 @@ self = module.exports = {
               description: "discount for non used service user time"
             })
             .then(function(invoiceItem){
-              resolve(invoiceItem);
+              self.saveEvent(req.id)
+                .then(function() {
+                  resolve(invoiceItem);
+                });
             })
             .catch(function(err){
               console.error(err);
