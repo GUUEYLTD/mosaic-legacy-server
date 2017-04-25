@@ -21,7 +21,7 @@ var self=module.exports={
                type:"guuey-date",
                title: "A service user Date is upcoming.",
                body: notifiable.message,
-               location: "https://careplan-c2677.firebaseapp.com" + notifiable.url
+               location: "https://mosaic-dev-b7ffe.firebaseapp.com" + notifiable.url
              };
              console.log(message.location);
              pushNotifications.messageUsers(message)
@@ -55,7 +55,7 @@ var self=module.exports={
               type:"simple",
               title: "An important Mosaic event has happened!",
               body: notifiable.message,
-              location: "https://careplan-c2677.firebaseapp.com/" + notifiable.url
+              location: "https://mosaic-dev-b7ffe.firebaseapp.com/" + notifiable.url
             };
             pushNotifications.messageUsers(message)
               .then(function(res) {
@@ -90,7 +90,7 @@ var self=module.exports={
                 type:"dailyMeds",
                 title: "Time for a service user's daily medication.",
                 body: notifiable.message,
-                location: "https://careplan-c2677.firebaseapp.com/" + notifiable.url
+                location: "https://mosaic-dev-b7ffe.firebaseapp.com/" + notifiable.url
               };
               pushNotifications.messageUsers(message)
                 .then(function(res) {

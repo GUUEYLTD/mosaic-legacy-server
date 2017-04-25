@@ -110,7 +110,7 @@ var self = module.exports={
           type:"simple",
           title: "Payment Processed",
           body: message,
-          location: "https://careplan-c2677.firebaseapp.com"
+          location: "https://mosaic-dev-b7ffe.firebaseapp.com"
         };
         pushNotifications.messageUsers(message)
           .then(function(res) {
@@ -150,7 +150,7 @@ var self = module.exports={
           type: "simple",
           title: "Payment Past Due",
           body: message,
-          location: "https://careplan-c2677.firebaseapp.com" + "/" + homeKey + "/admin/ad-payment"
+          location: "https://mosaic-dev-b7ffe.firebaseapp.com" + "/" + homeKey + "/admin/ad-payment"
         };
         pushNotifications.messageUsers(message)
           .then(function(res) {
@@ -190,7 +190,7 @@ var self = module.exports={
           type: "simple",
           title: "Subscription Cancelled",
           body: message,
-          location: "https://careplan-c2677.firebaseapp.com" + "/" + homeKey + "/admin/ad-payment"
+          location: "https://mosaic-dev-b7ffe.firebaseapp.com" + "/" + homeKey + "/admin/ad-payment"
         };
         pushNotifications.messageUsers(message)
           .then(function(res) {

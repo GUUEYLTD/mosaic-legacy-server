@@ -1,5 +1,5 @@
 var stripe = require("stripe")("sk_test_dmOoMspNlFJPKWj2Cl8H0hsD");
-var db = require("./firebase");
+var db = require("./firebase").db;
 
 self = module.exports = {
 
@@ -13,6 +13,24 @@ self = module.exports = {
           resolve({status:"unhandled stripe event: " + req.type})
           break;
       };
+    });
+  },
+
+  getEvent: function(id) {
+    return stripe.events.retrieve(id);
+  },
+
+  firstTimeEvent: function(id) {
+    return new Promise(function(resolve, reject) {
+      var eventDB = db.ref('/stripeEvents/' + id);
+      eventDB.once('value', function(eventData) {
+        var event = eventData.val();
+        if(event) {
+          reject({error: 'event has already been used.'});
+        } else {
+          resolve(id);
+        };
+      });
     });
   },
 
@@ -41,19 +59,27 @@ self = module.exports = {
     return stripe.customers.retrieve(customerID);
   },
 
+  saveEvent: function(id) {
+    var eventDB = db.ref('/stripeEvents');
+    return eventDB.update({[id]: true});
+  },
+
   //test handler
   handleInvoiceCreated:function(req, resolve, reject){
     self.getCustomer(req.data.object.customer)
     .then(function(customer){
       var usersDB = db.ref("/homes/" + customer.metadata.home + "/patients/suIndex");
-      usersDB.once("value", function(users){
+      usersDB.once("value", function(usersData){
+        var users = usersData.val();
         if(users === null) {
+          console.log('no users');
+          reject({error: 'no users'});
           return;
         };
         var usersProcessed = 0;
-        var usersLength = users.numChildren();
+        var usersLength = usersData.numChildren();
         var flatDiscountTotal = 0;
-        users.forEach(function(user){
+        usersData.forEach(function(user){
           if(user.currentStatus !== "archived" && self.userLessThan30(user.val()) ){
             var fullDays = self.getFullDays();
             var usedDays = self.getUsedDays(user.val());
@@ -72,7 +98,10 @@ self = module.exports = {
               description: "discount for non used service user time"
             })
             .then(function(invoiceItem){
-              resolve(invoiceItem);
+              self.saveEvent(req.id)
+                .then(function() {
+                  resolve(invoiceItem);
+                });
             })
             .catch(function(err){
               console.error(err);

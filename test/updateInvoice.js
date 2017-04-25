@@ -3,7 +3,7 @@ process.env.NODE_ENV = "development";
 let chai = require("chai");
 let chaiHTTP = require("chai-http");
 let app = require("../app");
-let should = chai.should();
+let expect = chai.expect;
  chai.use(chaiHTTP);
 
  //test the /GET route

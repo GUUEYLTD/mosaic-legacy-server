@@ -10,11 +10,11 @@ let expect = chai.expect
  describe("single user push notification test", () => {
    it("it should send a single notification to a single user unless single user has multiple devices", function(done) {
      this.timeout(10000);
-     var home = '-KTBXzZw3-qoZz4c7nY7';
+     var home = '-KhaRgQSPTsatmJWcShv';
      //321@mailinator.com
-     var user = 'Mu6N9b2RBqgcnlYqhvhWVguTTHB2';
+     var user = 'XZplIDmJG8RELncvnQOCulDokN03';
      //123@mailinator.com
-     var user2 = '0e64NPbXzOQ7Km8jXKQ3DHxOtpK2';
+     var user2 = '9TiFvTxUAvPMDwqrNyrMpZZCZhh1';
 
      fbMessaging.getSingleUserTokens(user2, home)
       .then(function(email) {
@@ -22,7 +22,7 @@ let expect = chai.expect
           type:"simple",
           title: "To: "+ email,
           body: "test body from mosaic test",
-          location: "https://careplan-c2677.firebaseapp.com/-KTBXzZw3-qoZz4c7nY7/care-plan/su-profile/-KTBYUmNSGo4W8c29cME"
+          location: "https://mosaic-dev-b7ffe.firebaseapp.com/-KhaRgQSPTsatmJWcShv/care-plan/su-profile/-KhaV8N-6gwk8Sk8znKn"
         };
 
         fbMessaging.messageUsers(message)

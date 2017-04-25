@@ -10,7 +10,7 @@ let expect = chai.expect
  describe("push notification tests", () => {
    it("it should return admin users for simple notification type", function(done) {
      this.timeout(10000);
-     var home = '-KTBXzZw3-qoZz4c7nY7';
+     var home = '-KhaRgQSPTsatmJWcShv';
      var type = 'simple';
      var conditions;
      fbMessaging.getRelevantUserTokens(home, type, conditions)
@@ -35,10 +35,10 @@ let expect = chai.expect
 
    it("it should return care worker users for guuey-date notification type", function(done) {
      this.timeout(10000);
-     var home = '-KTBXzZw3-qoZz4c7nY7';
+     var home = '-KhaRgQSPTsatmJWcShv';
      var type = 'guuey-date';
      var conditions = {
-       patientID: '-KTBYUmNSGo4W8c29cME'
+       patientID: '-KhaV8N-6gwk8Sk8znKn'
      };
      fbMessaging.getRelevantUserTokens(home, type, conditions)
       .then(function(tokens) {
@@ -61,10 +61,10 @@ let expect = chai.expect
 
    it("it should return care worker users for dailyMed notification type", function(done) {
      this.timeout(10000);
-     var home = '-KTBXzZw3-qoZz4c7nY7';
+     var home = '-KhaRgQSPTsatmJWcShv';
      var type = 'dailyMeds';
      var conditions = {
-       patientID: '-KTBYUmNSGo4W8c29cME'
+       patientID: '-KhaV8N-6gwk8Sk8znKn'
      };
      fbMessaging.getRelevantUserTokens(home, type, conditions)
       .then(function(tokens) {

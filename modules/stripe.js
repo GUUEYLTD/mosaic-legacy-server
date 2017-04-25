@@ -6,7 +6,8 @@ module.exports={
 
   initialSub:function(req){
     return new Promise(function(resolve, reject){
-      stripe.customers.create({source:req.stripeToken, plan:req.planId, quantity:req.users})
+      var metadata = { home: req.home};
+      stripe.customers.create({source:req.stripeToken, plan:req.planId, quantity:req.users, metadata: metadata})
       .then(function(customer){
         var date = new Date();
         var date = date.getTime();
